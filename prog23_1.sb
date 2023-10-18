@@ -1,0 +1,62 @@
+GraphicsWindow.Show()
+GraphicsWindow.BackgroundColor = "Black"
+GraphicsWindow.CanResize = "False"
+W = 600
+H = 400
+GraphicsWindow.Width = W
+GraphicsWindow.Height = H
+
+GraphicsWindow.MouseMove = OnMouseMove
+
+pw = 120
+ph = 15
+GraphicsWindow.PenColor = "Orange"
+GraphicsWindow.BrushColor = "Yellow"
+Paddle = Shapes.AddRectangle(pw,ph)
+Shapes.Move(Paddle,300,H-ph)
+
+br = 10
+GraphicsWindow.PenColor = "Blue"
+GraphicsWindow.BrushColor = "SteelBlue"
+Ball = Shapes.AddEllipse(2*br,2*br)
+
+x = Math.GetRandomNumber(W)
+y = 0
+
+dx = 1
+dy = 1
+
+Start:
+x = x + dx
+y = y + dy
+
+If x <= 0 Or x >= W - 2*br Then
+  dx = -dx
+EndIf
+
+If y <= 0 Then
+  dy = -dy
+EndIf
+
+px = Shapes.GetLeft(Paddle)
+If x >= px - br And x <= px + pw - br And y >= H - ph - 2*br Then
+  dy = -dy
+EndIf
+
+Shapes.Move(Ball,x,y)
+Program.Delay(5)
+
+If y <= H Then
+  Goto Start
+EndIf
+
+GraphicsWindow.ShowMessage("Game Over!","Paddle Game")
+Program.End()
+
+Sub OnMouseMove
+  px = GraphicsWindow.MouseX - pw/2
+  px = Math.Max(px, 0)
+  px = Math.Min(px, W-pw)
+  py = Shapes.GetTop(Paddle)
+  Shapes.Move(Paddle, px, py)
+EndSub
